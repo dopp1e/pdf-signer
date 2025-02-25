@@ -1,0 +1,15 @@
+{
+  "mentor": "Mentor",
+  "mentor_plural": "Mentorzy",
+  "jury": "Recenzenci",
+  "author": "Autor",
+  "author_plural": "Autorzy",
+  "academic_year": "Rok akademicki",
+
+  "figures_table": "Lista rysunków",
+  "tables_table": "Lista tabel",
+
+  "chapter": "Rozdział",
+
+  "version": "Wersja"
+}

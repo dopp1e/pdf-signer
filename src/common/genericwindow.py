@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QWidget, QComboBox, QLabel, QVBoxLayout, QHBoxLayout, QTabWidget
+from PyQt6.QtWidgets import QMainWindow, QWidget, QComboBox, QLabel, QVBoxLayout, QHBoxLayout, QTabWidget, QLineEdit
 from PyQt6 import QtCore
 import sys
 import os
@@ -11,9 +11,13 @@ class GenericWindow(QMainWindow):
     """
     def scan_pendrives(self):
         """
-        Scans the specified folder for connected usb devices to use.
+        Scans the specified folder for connected USB devices to use.
         """
-        subfolders = [f for f in os.scandir(usb_location) if f.is_dir()]
+        if not os.path.exists(self.location):
+            return
+        
+        subfolders = [f for f in os.scandir(self.location) if f.is_dir()]
+        #print(subfolders)
         new_pendrives = []
         for folder in subfolders:
             pendrive_name = os.path.basename(folder)
@@ -33,19 +37,36 @@ class GenericWindow(QMainWindow):
         self.pendrive_selector.setCurrentIndex(new_index)
         self.pendrives = new_pendrives
 
-    @QtCore.pyqtSlot(str)
-    def directory_changed(self, path):
+    def directory_changed(self):
         print("Directory changed, updating pendrive list.")
         self.scan_pendrives()
+
+    def location_confirm(self):
+        self.scan_pendrives()
+        pass
+
+    def location_changed(self):
+        if os.path.exists(self.directory_picker.text()):
+            self.directory_hint.setText("")
+        else:
+            self.directory_hint.setText("Path doesn't seem to exist. Please ensure it's a correct path.")
 
     def __init__(self):
         super().__init__()
         self.pendrives = []
         # self.setGeometry(50, 50, 500, 500)
         self.setWindowTitle("UwU")
+        self.location = usb_location
 
-        self.filewatcher = QtCore.QFileSystemWatcher([usb_location])
+        self.directory_hint = QLabel("")
+        self.filewatcher = QtCore.QFileSystemWatcher([self.location])
         self.filewatcher.directoryChanged.connect(self.directory_changed)
+        self.directory_label = QLabel("Choose the media location...")
+        self.directory_picker = QLineEdit()
+        self.directory_picker.textChanged.connect(self.location_changed)
+        self.directory_picker.textEdited.connect(self.location_confirm)
+        self.directory_picker.setText(self.location)
+        
 
         self.pendrive_label = QLabel("Select your pendrive...")
         self.pendrive_selector = QComboBox()
@@ -54,6 +75,9 @@ class GenericWindow(QMainWindow):
 
         self.inner_layout = QVBoxLayout()
         self.inner_layout.addStretch()
+        self.inner_layout.addWidget(self.directory_label)
+        self.inner_layout.addWidget(self.directory_picker)
+        self.inner_layout.addWidget(self.directory_hint)
         self.inner_layout.addWidget(self.pendrive_label)
         self.inner_layout.addWidget(self.pendrive_selector)
         self.inner_layout.addWidget(self.lower_layout)
@@ -70,3 +94,4 @@ class GenericWindow(QMainWindow):
         self.setCentralWidget(self.container)
         self.scan_pendrives()
         self.lower_layout.hide()
+        self.lower_layout.tabBar().setExpanding(True)

@@ -1,9 +1,9 @@
-from PyQt6.QtWidgets import QMainWindow, QWidget, QComboBox, QLabel, QVBoxLayout, QHBoxLayout, QTabWidget, QLineEdit
+from PyQt6.QtWidgets import QMainWindow, QWidget, QComboBox, QLabel, QVBoxLayout, QHBoxLayout, QTabWidget, QLineEdit, QMessageBox
 from PyQt6 import QtCore
 import sys
 import os
 
-usb_location = "/run/media/doppie/"
+usb_location = "/run/media/doppie"
 
 class GenericWindow(QMainWindow):
     """
@@ -35,6 +35,7 @@ class GenericWindow(QMainWindow):
             self.pendrive_selector.addItem(pendrive)
         
         self.pendrive_selector.setCurrentIndex(new_index)
+        self.pendrive_selected = new_index != -1
         self.pendrives = new_pendrives
 
     def directory_changed(self):
@@ -51,12 +52,28 @@ class GenericWindow(QMainWindow):
         else:
             self.directory_hint.setText("Path doesn't seem to exist. Please ensure it's a correct path.")
 
+    def get_pendrive_name(self) -> str:
+        return self.pendrive_selector.currentText()
+    
+    def get_watch_folder(self) -> str:
+        return self.directory_picker.text()
+    
+    def show_message(self, text: str):
+        message_box = QMessageBox()
+        message_box.setText(text)
+        message_box.exec()
+
+    def is_pendrive_selected(self) -> bool:
+        self.pendrive_selected = self.pendrive_selector.currentIndex() != -1
+        return self.pendrive_selected
+
     def __init__(self):
         super().__init__()
         self.pendrives = []
         # self.setGeometry(50, 50, 500, 500)
         self.setWindowTitle("UwU")
         self.location = usb_location
+        self.pendrive_selected = False
 
         self.directory_hint = QLabel("")
         self.filewatcher = QtCore.QFileSystemWatcher([self.location])
@@ -66,7 +83,6 @@ class GenericWindow(QMainWindow):
         self.directory_picker.textChanged.connect(self.location_changed)
         self.directory_picker.textEdited.connect(self.location_confirm)
         self.directory_picker.setText(self.location)
-        
 
         self.pendrive_label = QLabel("Select your pendrive...")
         self.pendrive_selector = QComboBox()
@@ -74,18 +90,21 @@ class GenericWindow(QMainWindow):
         self.lower_layout = QTabWidget()
 
         self.inner_layout = QVBoxLayout()
-        self.inner_layout.addStretch()
         self.inner_layout.addWidget(self.directory_label)
         self.inner_layout.addWidget(self.directory_picker)
         self.inner_layout.addWidget(self.directory_hint)
         self.inner_layout.addWidget(self.pendrive_label)
         self.inner_layout.addWidget(self.pendrive_selector)
         self.inner_layout.addWidget(self.lower_layout)
-        self.inner_layout.addStretch()
+        
+        self.middle_layout = QVBoxLayout()
+        self.middle_layout.addStretch(1)
+        self.middle_layout.addLayout(self.inner_layout, 3)
+        self.middle_layout.addStretch(1)
 
         self.outer_layout = QHBoxLayout()
         self.outer_layout.addStretch(1)
-        self.outer_layout.addLayout(self.inner_layout, 2)
+        self.outer_layout.addLayout(self.middle_layout, 3)
         self.outer_layout.addStretch(1)
 
         self.container = QWidget()

@@ -1,11 +1,23 @@
-from PyQt6.QtWidgets import QDialog, QMainWindow, QWidget, QComboBox, QLabel, QVBoxLayout, QHBoxLayout, QTabWidget, QLineEdit, QMessageBox, QDialogButtonBox, QGridLayout
+from PyQt6.QtWidgets import QDialog, QLabel, QLineEdit, QDialogButtonBox, QGridLayout
 from PyQt6 import QtCore
 
 class PasswordInput(QDialog):
-    def getPassword(self):
+    """
+    A dialog to ask the user for a password.
+    """
+    def getPassword(self) -> str:
+        """
+        Returns the password entered by the user.
+        
+        Returns:
+            str: The password entered by the user.
+        """
         return self.password_edit.text()
 
     def keyPressEvent(self, a0):
+        """
+        Overrides the keyPressEvent to handle Enter and Escape keys.
+        """
         if (a0 == QtCore.Qt.Key.Key_Enter):
             return self.done(1)
         elif (a0 == QtCore.Qt.Key.Key_Escape):
@@ -14,6 +26,9 @@ class PasswordInput(QDialog):
             return super().keyPressEvent(a0)
 
     def __init__(self):
+        """
+        Initializes the PasswordInput dialog.
+        """
         super().__init__()
         self.label = QLabel("Enter password to check.")
         self.password_edit = QLineEdit()

@@ -9,9 +9,10 @@ class GenericWindow(QMainWindow):
     """
     A window template class for both of the applications to use.
     """
-    def scan_pendrives(self):
+    def scan_pendrives(self) -> None:
         """
         Scans the specified folder for connected USB devices to use.
+        The folder is specified in the usb_location variable.
         """
         if not os.path.exists(self.location):
             return
@@ -38,36 +39,82 @@ class GenericWindow(QMainWindow):
         self.pendrive_selected = new_index != -1
         self.pendrives = new_pendrives
 
-    def directory_changed(self):
+    def directory_changed(self) -> None:
+        """
+        Called when the directory changes.
+        It updates the pendrive list and the directory picker.
+        """
         print("Directory changed, updating pendrive list.")
         self.scan_pendrives()
 
-    def location_confirm(self):
+    def location_confirm(self) -> None:
+        """
+        Called when the directory picker changes are confirmed.
+        It updates the pendrive list and the directory picker.
+        """
         self.scan_pendrives()
-        pass
 
-    def location_changed(self):
+    def location_changed(self) -> None:
+        """
+        Called when the directory picker is edited.
+        It updates the directory hint label.
+        """
         if os.path.exists(self.directory_picker.text()):
             self.directory_hint.setText("")
         else:
             self.directory_hint.setText("Path doesn't seem to exist. Please ensure it's a correct path.")
 
     def get_pendrive_name(self) -> str:
+        """
+        Returns the name of the selected pendrive.
+        If no pendrive is selected, it returns an empty string.
+
+        Returns:
+            str: The name of the selected pendrive.
+        """
         return self.pendrive_selector.currentText()
     
     def get_watch_folder(self) -> str:
+        """
+        Returns the path of the selected folder to watch.
+        If no folder is selected, it returns an empty string.
+        
+        Returns:
+            str: The path of the selected folder.
+        """
         return self.directory_picker.text()
     
-    def show_message(self, text: str):
+    def show_message(self, text: str) -> None:
+        """
+        Shows a message box with the specified text.
+        """
         message_box = QMessageBox()
         message_box.setText(text)
         message_box.exec()
 
     def is_pendrive_selected(self) -> bool:
+        """
+        Returns whether a pendrive is selected or not.
+        """
         self.pendrive_selected = self.pendrive_selector.currentIndex() != -1
         return self.pendrive_selected
+    
+    def reload_window(self) -> None:
+        """
+        Reloads the window, forcing it to redraw.
+        This is a workaround for a bug where the text in the window doesn't display correctly.
+        """
+        # absolutely insane workaround to make the text display
+        loop = QtCore.QEventLoop()
+        QtCore.QTimer.singleShot(0, loop.quit)
+        loop.exec()
+        # end of the workaround
 
     def __init__(self):
+        """
+        Initializes the GenericWindow class.
+        It sets up the window layout, pendrive selector, and directory picker.
+        """
         super().__init__()
         self.pendrives = []
         # self.setGeometry(50, 50, 500, 500)
@@ -99,12 +146,12 @@ class GenericWindow(QMainWindow):
         
         self.middle_layout = QVBoxLayout()
         self.middle_layout.addStretch(1)
-        self.middle_layout.addLayout(self.inner_layout, 3)
+        self.middle_layout.addLayout(self.inner_layout, 6)
         self.middle_layout.addStretch(1)
 
         self.outer_layout = QHBoxLayout()
         self.outer_layout.addStretch(1)
-        self.outer_layout.addLayout(self.middle_layout, 3)
+        self.outer_layout.addLayout(self.middle_layout, 6)
         self.outer_layout.addStretch(1)
 
         self.container = QWidget()

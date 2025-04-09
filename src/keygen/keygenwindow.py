@@ -95,7 +95,9 @@ class KeygenWindow(genericwindow.GenericWindow):
         """
         is_set = self.is_password_set()
         if (not is_set):
-            self.key_password_hint.setText("It is recommended to set a password!")
+            self.key_password_hint.setText("You must set a password!")
+        elif (len(self.password_input.text()) < 8):
+            self.key_password_hint.setText("Your password must be at least 8 characters or longer!")
         else:
             self.key_password_hint.setText("")
         self.update_button()
@@ -136,7 +138,7 @@ class KeygenWindow(genericwindow.GenericWindow):
         divisible = True
         if (bool(Logic.represents_int(self.custom_pk_input.text()))):
             divisible = Logic.is_divisible(int(self.custom_pk_input.text()), 512)
-        enabled = (self.is_key_name_ok() == 0 and custom and self.is_pendrive_selected() and divisible)
+        enabled = (self.is_key_name_ok() == 0 and custom and self.is_pendrive_selected() and divisible and len(self.password_input.text()) >= 8)
         self.generate_button.setEnabled(enabled)
 
     def generate_key(self) -> bool:
@@ -373,6 +375,7 @@ class KeygenWindow(genericwindow.GenericWindow):
         # Initialization:
 
         self.pendrive_selector.currentIndexChanged.connect(self.pendrive_selection_changed)
+        self.pendrive_selection_changed()
         self.password_updated()
         self.name_updated()
         self.switch_custom_input()

@@ -32,9 +32,11 @@ class GenericWindow(QMainWindow):
             new_index = new_pendrives.index(current_item) if current_item in new_pendrives else -1
 
         self.pendrive_selector.clear()
-        for pendrive in new_pendrives:
-            self.pendrive_selector.addItem(pendrive)
+        self.pendrive_selector.addItems(new_pendrives)
         
+        if (len(new_pendrives) > 0):
+            new_index = 0
+
         self.pendrive_selector.setCurrentIndex(new_index)
         self.pendrive_selected = new_index != -1
         self.pendrives = new_pendrives

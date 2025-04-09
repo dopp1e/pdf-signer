@@ -299,4 +299,5 @@ class SignerWindow(genericwindow.GenericWindow):
         # Connection set-up
 
         self.pendrive_selector.currentIndexChanged.connect(self.pendrive_selection_changed)
+        self.pendrive_selection_changed()
         self.verification_radio_toggled()

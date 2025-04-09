@@ -3,19 +3,9 @@
 #let versions = (
   (
     "v1.0",
-    "24.02.2025",
-    "Creation of the document outline."
-  ),
-  (
-    "v1.1",
-    "24.02.2025",
-    "Automatically generated document version table."
-  ),
-  (
-    "v1.2",
     "07.04.2025",
-    "Added description of the key generator for control term."
-  )
+    "Creation of the document."
+  ),
 )
 
 #show: project.with(
@@ -32,15 +22,13 @@
   academic-year: none,
   polish: false,
   footer-text: "",
-  supertitle: "Project Report",
+  supertitle: "Control Term",
   subject: [],
   versions: versions
 )
 
-#include "chapters/abstract.typ"
+= GitHub Repository
 
-#include "chapters/keygen.typ"
+#show link: set text(blue)
 
-//#include "chapters/signer.typ"
-
-#include "chapters/summary.typ"
+The GitHub repository containing the project's code can be found #link("https://github.com/jakub-jedrzejczyk/pdf-signer")[here].

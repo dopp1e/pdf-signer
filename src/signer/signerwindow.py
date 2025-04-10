@@ -162,6 +162,11 @@ class SignerWindow(genericwindow.GenericWindow):
         
         if (self.verification_public_key_radio_file.isChecked()):
             public_key_path = self.verification_public_key_path.text()
+        else:
+            watch_folder = self.get_watch_folder()
+            pendrive_name = self.get_pendrive_name()
+            selected_key = self.key_picker.currentText()
+            public_key_path = Logic.public_key_path_p(watch_folder, pendrive_name, selected_key)
         
         result = Logic.verify_pdf(pdf_to_check, public_key_path)
         if result == 0:
@@ -173,6 +178,8 @@ class SignerWindow(genericwindow.GenericWindow):
         elif result == 3:
             self.show_message("The PDF file has no signatures to check against.")
         elif result == 4:
+            self.show_message("The found PDF signature was invalid.")
+        elif result == 5:
             self.show_message("An unknown error occured, please try again.")
 
     def __init__(self):

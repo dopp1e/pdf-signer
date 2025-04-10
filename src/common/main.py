@@ -1,9 +1,10 @@
 from pyhanko import keys
-from pyhanko.sign import signers, fields
+from pyhanko.sign import signers, fields, validation
 from pyhanko.pdf_utils.incremental_writer import IncrementalPdfFileWriter
 from pyhanko.pdf_utils.reader import PdfFileReader
 
 from pyhanko_certvalidator.registry import SimpleCertificateStore
+from pyhanko_certvalidator import ValidationContext
 
 from cryptography.hazmat.primitives import serialization as crypto_serialization, hashes
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
@@ -222,8 +223,20 @@ class Logic:
             str: Path to the public key file.
         """
         return Logic.make_key_path(location, key_name) + QDir.separator() + "public_key"
+    
+    def public_key_path_p(watch_folder: str, pendrive_name: str, key_name: str) -> str:
+        """
+        Returns the path to the public key file from a watched folder, pendrive name and the name of the key.
 
-
+        Args:
+            watch_folder: Path to the watch folder.
+            pendrive_name: Name of the pendrive.
+            key_name: Name of the key.
+        
+        Returns:
+            str: Path to the public key file.
+        """
+        return Logic.public_key_path(Logic.make_key_location(watch_folder, pendrive_name), key_name)
 
     def does_key_exist(
         location: str,
@@ -650,7 +663,8 @@ class Logic:
             1 if no signature matched the public key.
             2 if the public key could not be loaded.
             3 if the PDF file has no signatures.
-            4 if any other error was encountered.
+            4 if the signature was invalid.
+            5 if any other error was encountered.
         """
 
         # load the public key
@@ -704,8 +718,13 @@ class Logic:
                     if embedded_public_key_der == provided_public_key_der:
                         # verify integrity if matched
                         try:
-                            sig.compute_integrity_info()
-                            found_matching_valid_signature = True
+                            vc = ValidationContext()
+                            status = validation.validate_pdf_signature(sig, vc)
+                            
+                            if (status.intact):
+                                found_matching_valid_signature = True
+                            else:
+                                return 4
 
                         except Exception as e:
                             pass
@@ -715,4 +734,4 @@ class Logic:
 
         except Exception as e:
             # any other errors
-            return 4
+            return 5

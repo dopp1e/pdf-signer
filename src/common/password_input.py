@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QDialog, QLabel, QLineEdit, QDialogButtonBox, QGridLayout
+from PyQt6.QtWidgets import QDialog, QLabel, QLineEdit, QDialogButtonBox, QHBoxLayout, QVBoxLayout
 from PyQt6 import QtCore
 
 class PasswordInput(QDialog):
@@ -41,11 +41,22 @@ class PasswordInput(QDialog):
         self.button_box.button(QDialogButtonBox.StandardButton.Cancel).setText("Cancel")
         self.button_box.button(QDialogButtonBox.StandardButton.Cancel).released.connect(lambda: self.done(0))
 
-        self.form_grid_layout = QGridLayout()
-        self.form_grid_layout.addWidget(self.label, 0, 0, 1, 1)
-        self.form_grid_layout.addWidget(self.password_edit, 1, 0, 1, 1)
-        self.form_grid_layout.addWidget(self.button_box, 2, 0, 1, 1)
+        self.inner_box = QVBoxLayout()
+        self.inner_box.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.inner_box.addWidget(self.label)
+        self.inner_box.addWidget(self.password_edit)
+        self.inner_box.addWidget(self.button_box)
 
-        self.setLayout(self.form_grid_layout)
+        self.hbox = QVBoxLayout()
+        self.hbox.addStretch(1)
+        self.hbox.addLayout(self.inner_box, 5)
+        self.hbox.addStretch(1)
+
+        self.vbox = QHBoxLayout()
+        self.vbox.addStretch(1)
+        self.vbox.addLayout(self.hbox, 5)
+        self.vbox.addStretch(1)
+
+        self.setLayout(self.vbox)
 
         

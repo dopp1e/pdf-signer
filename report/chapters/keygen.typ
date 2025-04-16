@@ -114,4 +114,28 @@ The public key is saved in a standard PEM format, making it easy to read in case
 
 Should the user choose to verify the password of the key, an appropriate prompt will appear.
 
-// == Implementation
+#figure(
+  image("../images/keygen_password.png", width: 80%),
+  caption: "Key password verification window."
+)
+
+They can fill it in with their password and press _Test_ (or press _Enter_ on their keyboard) to ensure the password they remember is correct.
+Pressing _Cancel_ (or _Escape_ on the keyboard) will close the window without checking the password.
+
+#grid(
+  columns: (auto, auto),
+  rows: 1,
+  gutter: 1em,
+  figure(
+    image("../images/keygen_password_correct.png", width: 90%),
+    caption: "Application confirming the chosen password is correct."
+  ),
+  figure(
+    image("../images/keygen_password_incorrect.png", width: 90%),
+    caption: "Application confirming the chosen password is incorrect."
+  )  
+)
+
+Lastly, the user may choose to delete a key - they are not prompted for any confirmation, the key being immediately removed from the pendrive and, by extension, the application's GUI.
+
+== Implementation

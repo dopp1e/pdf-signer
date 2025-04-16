@@ -251,6 +251,21 @@ class KeygenWindow(genericwindow.GenericWindow):
         self.keys_widget = QWidget()
         self.keys_widget.setLayout(self.keys_layout)
         self.keys_scroll.setWidget(self.keys_widget)
+        if (len(keys) == 0):
+            no_key_container = QWidget()
+            no_key_box = QHBoxLayout(no_key_container)
+            no_key_box.setContentsMargins(0, 0, 0, 0)
+            no_key_box.setSpacing(0)
+            no_key_label = QLabel("No keys found!")
+            no_key_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+            label_font = no_key_label.font()
+            label_font.setItalic(True)
+            no_key_label.setFont(label_font)
+            no_key_box.addWidget(no_key_label)
+            self.keys_layout.addStretch()
+            self.keys_layout.addWidget(no_key_container)
+            self.keys_layout.addStretch()
+
         for key in keys:
             key_container = QWidget()
             key_box = QHBoxLayout(key_container)

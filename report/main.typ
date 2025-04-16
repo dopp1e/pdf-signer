@@ -41,6 +41,6 @@
 
 #include "chapters/keygen.typ"
 
-//#include "chapters/signer.typ"
+#include "chapters/signer.typ"
 
 #include "chapters/summary.typ"

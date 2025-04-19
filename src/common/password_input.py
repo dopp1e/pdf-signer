@@ -1,3 +1,8 @@
+"""
+This module defines a PasswordInput class that creates a dialog for the user to input a password.
+It inherits from QDialog and contains a label, a password input field, and buttons for testing or canceling the input.
+It also handles key press events for Enter and Escape keys.
+"""
 from PyQt6.QtWidgets import QDialog, QLabel, QLineEdit, QDialogButtonBox, QHBoxLayout, QVBoxLayout
 from PyQt6 import QtCore
 

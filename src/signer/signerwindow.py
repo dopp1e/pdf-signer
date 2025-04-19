@@ -1,3 +1,8 @@
+"""
+SignerWindow class for signing and verifying PDF files.
+This class provides a GUI for selecting PDF files,
+keys, and performing signing and verification operations.
+"""
 from PyQt6.QtWidgets import QFileDialog, QPushButton, QWidget, QLineEdit, QVBoxLayout, QComboBox, QLabel, QHBoxLayout, QRadioButton
 from PyQt6 import QtCore
 

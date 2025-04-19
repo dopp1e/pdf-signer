@@ -15,6 +15,16 @@
     "v1.2",
     "07.04.2025",
     "Added description of the key generator for control term."
+  ),
+  (
+    "v1.3",
+    "18.04.2025",
+    "Slight fixes to chapter 3.2, started chapter 3.3."
+  ),
+  (
+    "v1.4",
+    "19.04.2025",
+    "Added description of the signer's implementation."
   )
 )
 
@@ -44,3 +54,7 @@
 #include "chapters/signer.typ"
 
 #include "chapters/summary.typ"
+
+#pagebreak()
+
+#bibliography("citations.bib")

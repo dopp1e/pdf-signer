@@ -2,7 +2,8 @@
 
 == Description
 
-The key generator (also called _keygen_, or the _auxiliary application_) is a simple application for generating a set of RSA keys, with the private one being encrypted, all of which are stored on a USB pendrive. These keys are to be later used by the _Signer_, the main application of the project.
+The key generator (also called _keygen_, or the _auxiliary application_) is a simple application for generating a set of RSA keys, with the private one being encrypted, all of which are stored on a USB pendrive.
+These keys are to be later used by the _signer_, the main application of the project.
 
 == Functionality Overview
 
@@ -138,4 +139,134 @@ Pressing _Cancel_ (or _Escape_ on the keyboard) will close the window without ch
 
 Lastly, the user may choose to delete a key - they are not prompted for any confirmation, the key being immediately removed from the pendrive and, by extension, the application's GUI.
 
+#figure(
+  image("../images/keygen_no_keys.png", width: 80%),
+  caption: "Key generator application with no keys available."
+)
+
+If the application has no keys availalbe on the chosen pendrive, the user will be informed of that being the case.
+
+#pagebreak()
+
 == Implementation
+
+For the generation of the key, the _cryptography_ library was used, which is a well-known and widely used library for cryptographic operations in Python.
+
+#figure(
+  [
+    ```py
+import hashlib
+import os
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives.ciphers.aead import AESGCMSIV
+from cryptography.hazmat.primitives import serialization as crypto_serialization
+
+def generate_key(public_exponent: int, key_size: int, password: str) -> Tuple[bytes, bytes, bytes]:
+  key = rsa.generate_private_key(
+          public_exponent,
+          key_size
+      )
+
+  private_key = key.private_bytes(
+          crypto_serialization.Encoding.PEM,
+          crypto_serialization.PrivateFormat.PKCS8,
+          crypto_serialization.NoEncryption()
+      )
+
+  public_key = key.public_key().public_bytes(
+          crypto_serialization.Encoding.PEM,
+          crypto_serialization.PublicFormat.PKCS1
+          )
+
+  aes_key = hashlib.sha256(password.encode()).digest()
+  aes = AESGCMSIV(aes_key)
+  nonce = os.urandom(12)
+  return nonce, aes.encrypt(nonce, data=private_key, associated_data=None), public_key
+```
+  ],
+  caption: "Code used for generation of the key."
+)
+
+In particular, the key is generated using the RSA algorithm, with the private key product of it being encrypted using AES-GCM-SIV.
+
+The package's RSA implementation is a standard one, and uses the following steps @computerphilePrimeNumbersRSA2021, @RSACryptosystem2025:
++ Choose two large prime numbers, $p$ and $q$.
+  - Both of them are kept secret, and should have a sufficeable difference between them @rivestMethodObtainingDigital1978.
++ Compute $n = p dot q$.
+  - This $n$ will be a part of the public key.
++ Compute $lambda(n)$ where $lambda$ is the Carmichael's totient function @CarmichaelFunction2025, thus making it so $lambda(n)$ is the least common multiple of $p - 1$ and $q - 1$.
+  - $lambda(n)$ is kept secret.
++ Choose a public exponent $e$ such that $1 < e < lambda(n)$ and the greatest common divisor of $e$ and $lambda(n)$ equals $1$, making them coprime.
+  - $e$ is released as part of the public key and is usually set to $65537$.
++ Compute the private exponent $d$ such that $d = e^(-1) mod lambda(n)$; thus making it so $d$ is the modular multiplicative inverse of $e$ modulo $lambda(n)$.
+  - $d$ is kept secret.
+
+Then, the public key is made up of the pair $(e, n)$, while the private key can be saved simply as the number $d$. $p$, $q$ and $lambda(n)$ don't need to be saved, however, they should be kept secret, as they allow to calculate $d$ from the public key.
+
+The private and public parts of the key and then extracted from the returned value of the function and saved in a PEM format, perfect for storing and sending cryptographic keys @PrivacyEnhancedMail2025, making it perfect for this application. 
+
+As per the requiements of the project, the provided password is first converted into a byte array (```python password.encode()```) and then hashed using SHA-256, and finally turned into a byte array, which can then be utilised as a 256-bit long key-generating key for AES.
+
+The particular AES operation mode used here is *AES-GCM-SIV*, meaning *AES* in #strong[G]alois/#strong[C]ounter #strong[M]ode with #strong[S]ynthetic #strong[I]nitialization #strong[V]ector.
+
+Without the synthetic initialization vector, AES with GCM operates similarly to the standard AES in counter mode as explained during the lecture - blocks are numbered sequentially, then each block is combined with an initialization vector (IV) and encrypted with a block cipher $E$, in this case, AES. This result is then XORed with the plaintext to produce the ciphertext.
+
+These ciphertext blocks are then considered coefficients of a polynomial which is evaluated at a key-dependent point $H$ using finite field arithmetic. The encryption of the result produces an authentication tag, allowing to verify the integrity of the ciphertext @GaloisCounterMode2025.
+
+The addition of a synthetic initialization vector makes it so the IV is calculated per combination of nonce, plaintext, and additional data, making it so even in the event of re-using a nonce, in spite of the general recommendation not to do so, the ciphertext will be different, assuming different plaintexts or additional data are used @AESGCMSIV2025 @gueronAESGCMSIVNonceMisuseResistant2019.
+
+The nonce required for this algorithm is calculated using the ```python os.urandom(12)``` function, which generates a random 12-byte (96-bit) long nonce, which is then used to encrypt the private key. The actual generation of this random number is delegated to the operating system, as per Python implementation @OsMiscellaneousOperating - this number is not truly random, but all modern OS' implementations of random number generators should be acceptable for an application of this kind @incognitoRandDevUrandom2016 @porninAnswerRandDev2011 @alvinashcraftCNGFeaturesWin32 @woodsDataSecurityApple2024.
+
+Finally, we can use the nonce and the created AESGCMSIV object to encrypt the private key, returning it together with the nonce (as it's required to decrypt the private key, e.g. for signing) and the public key, which is not encrypted, allowing easy sharing with another user.
+
+#figure(
+  [
+    ```py
+import hashlib
+import os
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives.ciphers.aead import AESGCMSIV
+from cryptography.hazmat.primitives import serialization as crypto_serialization
+from PyQt6.QtCore import QFile, QDir
+
+def load_private_key(
+  password: str, 
+  location: str, 
+  key_name: str
+) -> Tuple[bool, bytes]:
+  key_path = Logic.make_key_path(location, key_name)
+  dir = QDir(key_path)
+  if not dir.exists():
+    return False, None
+  
+  nonce = 0
+  nonce_file = QFile(Logic.nonce_path(location, key_name))
+  if (nonce_file.open(QFile.OpenModeFlag.ReadOnly)):
+    nonce = nonce_file.readAll()
+    nonce_file.close()
+
+  private_key = 0
+  private_key_file = QFile(Logic.private_key_path(location, key_name))
+  if (private_key_file.open(QFile.OpenModeFlag.ReadOnly)):
+    private_key = private_key_file.readAll()
+    private_key_file.close()
+
+  aes_key = hashlib.sha256(password.encode()).digest()
+  aes = AESGCMSIV(aes_key)
+
+  try:
+    private_key = aes.decrypt(nonce, data=private_key, associated_data=None)
+  except:
+    return False, None
+  
+  return True, private_key
+```
+  ],
+  caption: "Code used for loading a key."
+)
+
+The loading of the key is done analogously to the generation of it - the function first checks if the location containing said key exists, and if it does, uses standard _Qt_ functions to read the files containing the nonce and the encrypted private key.
+As the user has been prompted to provide a password earlier, it is passed into the function and then hashed in the same way as previously to produce the AESGCMSIV object, which is later used to decrypt the private key.
+This action throws an error if any part of the process fails, so it is encapsulated in a _try-except_ block - the application does not crash in case of an error, whether it's a non-existent key, or a wrong password.
+The function returns a boolean value indicating whether the loading was successful, as well as the private key itself, which is then used by the _signer_ (described in the following chapter) to sign the data.
+This return value is used as the basis of the password verification functionality the _keygen_ offers - the function returning false is treated as the password being incorrect, whereas a positive value is treated as the password being correct.

@@ -1,3 +1,8 @@
+"""
+KeygenWindow class for generating and managing keys.
+This class inherits from the GenericWindow class and provides functionality
+for generating keys, checking passwords, deleting keys, and exporting public keys.
+"""
 from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QCheckBox, QLineEdit, QPushButton, QScrollArea, QFileDialog
 from PyQt6 import QtCore
 

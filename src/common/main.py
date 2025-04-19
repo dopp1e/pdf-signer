@@ -1,3 +1,7 @@
+"""
+This module contains the Logic class, which provides various utility functions
+for handling cryptographic operations, file management, PDF signing, and verification.
+"""
 from pyhanko import keys
 from pyhanko.sign import signers, fields, validation
 from pyhanko.pdf_utils.incremental_writer import IncrementalPdfFileWriter

@@ -8,6 +8,7 @@
   set page(
     numbering: "1 / 1",
     number-align: center,
+    margin: (top: 64pt, bottom: 64pt, left: 48pt, right: 48pt),
     footer: context {
       // Omit page number on the first page
       let page-number = counter(page).at(here()).at(0)

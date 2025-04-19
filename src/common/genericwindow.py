@@ -1,3 +1,9 @@
+"""
+This file contains the GenericWindow class, which is a template for creating
+windows in a PyQt6 application. It provides functionality for scanning USB devices,
+selecting a pendrive, and picking a directory to watch. The class also includes methods
+for displaying messages and checking if a pendrive is selected.
+"""
 from PyQt6.QtWidgets import QMainWindow, QWidget, QComboBox, QLabel, QVBoxLayout, QHBoxLayout, QTabWidget, QLineEdit, QMessageBox
 from PyQt6 import QtCore
 import sys

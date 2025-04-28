@@ -400,3 +400,54 @@ class KeygenWindow(genericwindow.GenericWindow):
         self.name_updated()
         self.switch_custom_input()
         self.update_button()
+
+    ## @var key_name_input
+    # The QLineEdit widget for entering the key name.
+    # @var key_name_label
+    # The label for the key name input field.
+    # @var key_name_box
+    # The layout for the key name input field and label.
+    # @var password_input
+    # The QLineEdit widget for entering the key password.
+    # @var password_label
+    # The label for the key password input field.
+    # @var password_box
+    # The layout for the key password input field and label.
+    # @var custom_settings_check
+    # The QCheckBox for enabling custom settings.
+    # @var custom_settings_label
+    # The label for the custom settings checkbox.
+    # @var custom_settings_box
+    # The layout for the custom settings checkbox and label.
+    # @var custom_pk_input
+    # The QLineEdit widget for entering the custom key size.
+    # @var custom_pk_label
+    # The label for the custom key size input field.
+    # @var custom_pk_box
+    # The layout for the custom key size input field and label.
+    # @var key_name_hint
+    # The label for displaying hints about the key name input.
+    # @var key_password_hint
+    # The label for displaying hints about the key password input.
+    # @var custom_settings_hint
+    # The label for displaying hints about the custom settings.
+    # @var key_generated_hint
+    # The label for displaying messages about key generation.
+    # @var generate_button
+    # The QPushButton for generating the key.
+    # @var keys_outer_layout
+    # The outer layout for the key management section.
+    # @var keys_scroll
+    # The QScrollArea for displaying the list of keys.
+    # @var keys_widget
+    # The QWidget for holding the list of keys.
+    # @var keys_layout
+    # The layout for the list of keys.
+    # @var keymanagement
+    # The QWidget for the key management section.
+    # @var keygenlayout
+    # The layout for the key generation section.
+    # @var keygeneration
+    # The QWidget for the key generation section.
+    # @var lower_layout
+    # The layout for the lower part of the window, containing the key generation and management sections.

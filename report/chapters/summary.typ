@@ -1,20 +1,11 @@
 = Summary
 
-The entirety of the auxiliary application is complete and working as expected.
+#show link: set text(blue, style: "italic")
 
-*Implemented So Far:*
-- RSA key generation;
-- AES encryption of the private key based on the SHA256 hash of a PIN / password;
-- detection of connected pendrives;
-- saving the RSA generated to a connected pendrive under a selected name;
-- exporting the public part of a given key to another location, as selected by the user;
-- checking the password of a private key;
-- deletion of a key;
-- all of the aforementioned functionalities are a part of a coherently themed GUI.
+As per the project's requirements, the entirety of both applications was implemented, allowing one user (_A_) to generate keys using an auxiliary application and use the main application to sign documents, as well as for another user (_B_) to verify the signatures using the same main application.
 
-*To Do:*
-- loading a PDF file;
-- adding a signature based on a specific key to the loaded PDF file;
-- listing the signatures of a loaded PDF file;
-- checking whether a signature has been signed by the private counterpart of a public key;
-- implementing a GUI to allow for easy usage of all these functions.
+This implementation was done in Python, its code is available on #link("https://github.com/jakub-jedrzejczyk/pdf-signer", "Github"), and it follows the requirements of the project, those being:
+- The key generation application generates a public/private 4096-bit long RSA key pair and stores it in a file, with the private key being encrypted using AES, where the 256-bit key is the hash from a password.
+- This key pair is stored on an automatically detected USB drive.
+- The main application allows the user to sign a PDF document using the private key and verify the signature using the public key.
+- All applications provide appropriate error handling and user feedback so that the user is aware of the application's state at all times.

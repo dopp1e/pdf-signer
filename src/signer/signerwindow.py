@@ -112,9 +112,20 @@ class SignerWindow(genericwindow.GenericWindow):
         location = Logic.make_key_location(watch_folder, pendrive_name)
         keys = Logic.list_keys(location)
         self.key_picker.clear()
-        self.key_picker.addItems(keys)
         self.verification_key_pendrive_picker.clear()
-        self.verification_key_pendrive_picker.addItems(keys)
+        if (len(keys) == 0):
+            self.allow_key_usage = False
+            self.key_picker.addItem("No keys found")
+            self.verification_key_pendrive_picker.addItem("No keys found")
+            self.key_picker.setEnabled(False)
+            self.verification_key_pendrive_picker.setEnabled(False)
+            self.signage_confirm_button.setEnabled(False)
+            self.verification_submit_button.setEnabled(False)
+            return
+        else:
+            self.allow_key_usage = True
+            self.key_picker.addItems(keys)
+            self.verification_key_pendrive_picker.addItems(keys)
 
     def signage_inputs_updated(self) -> None:
         """
@@ -122,8 +133,8 @@ class SignerWindow(genericwindow.GenericWindow):
         It enables/disables the signage confirm button based on the inputs.
         """
         has_path = self.signage_file_picked_path.text() != ""
-        has_key = self.key_picker.currentText() != ""
-        self.signage_confirm_button.setEnabled(has_path and has_key)
+        has_key = self.key_picker.currentText() != "" and self.key_picker.currentText() != "No keys found"
+        self.signage_confirm_button.setEnabled(has_path and has_key and self.allow_key_usage)
 
     def verification_radio_toggled(self) -> None:
         """
@@ -151,7 +162,7 @@ class SignerWindow(genericwindow.GenericWindow):
         if (self.verification_public_key_radio_file.isChecked()):
             has_key = self.verification_public_key_path.text() != ""
         if (self.verification_public_key_radio_pendrive.isChecked()):
-            has_key = self.verification_key_pendrive_picker.currentText() != ""
+            has_key = self.verification_key_pendrive_picker.currentText() != "" and self.allow_key_usage
         has_path = self.verification_pdf_file_path.text() != ""
         self.verification_submit_button.setEnabled(has_path and has_key)
 
@@ -195,6 +206,7 @@ class SignerWindow(genericwindow.GenericWindow):
         super().__init__()
         self.lower_layout.show()
 
+        self.allow_key_usage = False
         self.signed_pdf = None
         self.signage = QWidget()
         self.verification = QWidget()
@@ -313,3 +325,66 @@ class SignerWindow(genericwindow.GenericWindow):
         self.pendrive_selector.currentIndexChanged.connect(self.pendrive_selection_changed)
         self.pendrive_selection_changed()
         self.verification_radio_toggled()
+
+    ## @var signage
+    # The QWidget for the signing tab.
+    # @var verification
+    # The QWidget for the verification tab.
+    # @var signage_layout
+    # The QVBoxLayout for the signing tab.
+    # @var verification_layout
+    # The QVBoxLayout for the verification tab.
+    # @var allow_key_usage
+    # A boolean indicating whether key usage is allowed.
+    # @var signed_pdf
+    # The signed PDF file.
+    # @var signage_file_picked_path
+    # The QLineEdit for the selected PDF file to sign.
+    # @var signage_file_picked_button
+    # The QPushButton for selecting the PDF file to sign.
+    # @var signage_confirm_button
+    # The QPushButton for confirming the signing operation.
+    # @var signage_save_button
+    # The QPushButton for saving the signed PDF file.
+    # @var signage_status_label
+    # The QLabel for displaying the status of the signing operation.
+    # @var key_picker
+    # The QComboBox for selecting the key to use for signing.
+    # @var key_picker_label
+    # The QLabel for the key picker.
+    # @var verification_key_pendrive_picker
+    # The QComboBox for selecting the key from the pendrive for verification.
+    # @var verification_key_pendrive_label
+    # The QLabel for the key from the pendrive.
+    # @var verification_key_pendrive_box
+    # The QHBoxLayout for the key from the pendrive.
+    # @var verification_public_key_path
+    # The QLineEdit for the public key file path for verification.
+    # @var verification_public_key_pick_button
+    # The QPushButton for selecting the public key file for verification.
+    # @var verification_public_key_label
+    # The QLabel for the public key file path.
+    # @var verification_public_key_box
+    # The QHBoxLayout for the public key file path.
+    # @var verification_public_key_radio_pendrive
+    # The QRadioButton for choosing the public key from the pendrive.
+    # @var verification_public_key_radio_file
+    # The QRadioButton for choosing the public key from a file.
+    # @var verification_public_key_type_choice_box
+    # The QHBoxLayout for the public key type choice.
+    # @var verification_public_key_outer_box
+    # The QHBoxLayout for the public key outer box.
+    # @var verification_pdf_file_path
+    # The QLineEdit for the PDF file path for verification.
+    # @var verification_pdf_file_button
+    # The QPushButton for selecting the PDF file for verification.
+    # @var verification_pdf_file_label
+    # The QLabel for the PDF file path for verification.
+    # @var verification_pdf_file_box
+    # The QHBoxLayout for the PDF file path for verification.
+    # @var verification_submit_button
+    # The QPushButton for submitting the verification operation.
+    # @var signage_file_picked_box
+    # The QHBoxLayout for the selected PDF file to sign.
+    # @var signage_file_picked_label
+    # The QLabel for the selected PDF file to sign.

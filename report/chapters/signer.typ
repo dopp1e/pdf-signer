@@ -7,6 +7,116 @@ The signature should follow the PAdES standard, a specific set of restrictions a
 
 == Functionality Overview
 
+The application starts in signing mode, allowing the user to sign a PDF file using a private key that is stored on a USB drive.
+
+#figure(
+  image("../images/signer_signage_no_key_no_file.png"),
+  caption: "Signer right after starting up."
+)
+
+As can be seen on the image, should the application not find a generated key on the USB drive, it will display a message indicating so.
+At that point, even selecting a PDF file will not allow the user to sign it.
+
+#figure(
+  image("../images/signer_signage_no_key.png"),
+  caption: "Signer with a key and a PDF."
+)
+
+Should the user add a key to the USB drive, the application will allow the user to sign a PDF file.
+
+#figure(
+  image("../images/signer_signage_ready.png"),
+  caption: "Signer, ready to sign a PDF."
+)
+
+After pressing the "Sign the PDF" button, the application will first prompt the user to provide a password to decrypt the saved private key.
+
+#figure(
+  image("../images/signer_password_prompt.png"),
+  caption: "Password prompt for the private key."
+)
+
+Should the provided password not be correct, the application will inform of the fact most likely being the case.
+
+#figure(
+  image("../images/signer_incorrect_password.png"),
+  caption: "Signer after providing an incorrect password."
+)
+
+Meanwhile, if the password is correct, the application will proceed to sign the PDF file using the private key, and inform the user of the success of the operation.
+
+#figure(
+  image("../images/signer_signed_ready.png"),
+  caption: "Signer, ready to save the signed PDF."
+)
+
+At this point the file is signed and saved in the application's memory, but not yet saved to the disk -- should the user close the application, the signed file will be lost.
+This state is further indicated by the "Save the PDF" button being enabled and an appropriate message indicated below.
+After pressing this button the user will be prompted to select a location to save the signed PDF file, together with the name of the file.
+
+#figure(
+  image("../images/signer_saving_file.png"),
+  caption: "Saving the signed PDF file."
+)
+
+Once that's done, the file will be saved to the specified location and the user will be notified of the success of the operation.
+
+#figure(
+  image("../images/signer_saved.png"),
+  caption: "Signer notifying the user of the file having been saved."
+)
+
+Similarly to the signing mode, the verification mode of the application allows the user to verify a PDF file using a public key that is stored on a USB drive.
+By default, due to the application's intended purpose, it tries to suggest to select a public key file rather than use a public key directly from the USB drive. 
+
+#figure(
+  image("../images/signer_verification_no_key_no_file.png"),
+  caption: "Signer's verification mode when no key is detected."
+)
+
+Should the user try to verify a PDF file using a public key from a USB drive that has no keys saved on it, the application will not allow the user to verify a selected PDF file.
+
+#figure(
+  image("../images/signer_verification_no_key.png"),
+  caption: "Signer's verification mode after selecting a USB drive with no keys and a PDF file."
+)
+
+At the same time, if the user chooses to then select a public key file instead of a USB drive's public key, the application will allow the user to verify a selected PDF file.
+
+#figure(
+  image("../images/signer_verification_key_file_ok.png"),
+  caption: "Signer's verification mode after selecting a public key file and a PDF file."
+)
+
+Once a valid public key file is selected and the "Verify" button is pressed by the user, the application will attempt to verify the selected PDF file using the provided public key.
+
+#figure(
+  image("../images/signer_verified.png"),
+  caption: "Signer notifying of a successful verification."
+)
+
+If the user chose a key that does not have a matching signature in the PDF file, the application will notify the user of that fact.
+
+#figure(
+  image("../images/signer_no_key_found.png"),
+  caption: "Signer notifying of the signature not matching the provided public key."
+)
+
+The very same happens if the PDF has been modified after being signed, while the signature does not match the provided public key.
+In such a case, the application does not check for the signature's validity.
+
+#figure(
+  image("../images/signer_no_key_modified.png"),
+  caption: "Signer notifying of the signature not matching the provided public key when a PDF file has been modified."
+)
+
+Lastly, if the user tries to verify a PDF file that contains a signature that matches the provided public key, but the signature is invalid, whether it be due to the file or the signature itself being modified, the application will notify the user of that fact.
+
+#figure(
+  image("../images/signer_invalid_signature.png"),
+  caption: "Signer notifying of the signature being invalid."
+)
+
 == Implementation
 
 The signing functionality of the application is primarily provided by the _pyhanko_ library. Using it, the following function allows to sign any PDF file given its path and a signer object.

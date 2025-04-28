@@ -25,6 +25,11 @@
     "v1.4",
     "19.04.2025",
     "Added description of the signer's implementation."
+  ),
+  (
+    "v1.5",
+    "28.04.2025",
+    "Finished the description of the signer's implementation, its functionality, and the summary."
   )
 )
 

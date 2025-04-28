@@ -169,3 +169,37 @@ class GenericWindow(QMainWindow):
         self.scan_pendrives()
         self.lower_layout.hide()
         self.lower_layout.tabBar().setExpanding(True)
+
+    ## @var pendrives
+    # The list of pendrives connected to the system.
+    # @var pendrive_selected
+    # A boolean indicating whether a pendrive is selected or not.
+    # @var location
+    # The location of the pendrives.
+    # @var directory_picker
+    # The QLineEdit widget for selecting the directory to watch.
+    # @var directory_label
+    # The label for the directory picker.
+    # @var directory_hint
+    # The label for displaying hints about the directory picker.
+    # @var pendrive_label
+    # The label for the pendrive selector.
+    # @var pendrive_selector
+    # The QComboBox widget for selecting the pendrive.
+    # @var filewatcher
+    # The QFileSystemWatcher for monitoring changes in the directory.
+    # @var lower_layout
+    # The QTabWidget for displaying additional information or options.
+    # @var inner_layout
+    # The inner vertical layout for the directory picker and pendrive selector.
+    # @var middle_layout
+    # The middle vertical layout for the main window.
+    # @var outer_layout
+    # The outer horizontal layout for the main window.
+    # @var container
+    # The main container widget for the window.
+    # @var hbox
+    # The main horizontal layout for the window.
+    # @var vbox
+    # The main vertical layout for the window.
+    

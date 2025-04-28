@@ -35,13 +35,13 @@ class PasswordInput(QDialog):
         Initializes the PasswordInput dialog.
         """
         super().__init__()
-        self.label = QLabel("Enter password to check.")
+        self.label = QLabel("Enter password to check.") 
         self.password_edit = QLineEdit()
         self.password_edit.setEchoMode(QLineEdit.EchoMode.Password)
         self.button_box = QDialogButtonBox()
         self.button_box.addButton(QDialogButtonBox.StandardButton.Ok)
         self.button_box.addButton(QDialogButtonBox.StandardButton.Cancel)
-        self.button_box.button(QDialogButtonBox.StandardButton.Ok).setText("Test")
+        self.button_box.button(QDialogButtonBox.StandardButton.Ok).setText("OK")
         self.button_box.button(QDialogButtonBox.StandardButton.Ok).released.connect(lambda: self.done(1))
         self.button_box.button(QDialogButtonBox.StandardButton.Cancel).setText("Cancel")
         self.button_box.button(QDialogButtonBox.StandardButton.Cancel).released.connect(lambda: self.done(0))
@@ -64,4 +64,15 @@ class PasswordInput(QDialog):
 
         self.setLayout(self.vbox)
 
-        
+    ## @var label
+    # The label for the password input field.
+    # @var password_edit
+    # The QLineEdit widget for entering the password.
+    # @var button_box
+    # The QDialogButtonBox containing OK and Cancel buttons.
+    # @var inner_box
+    # The inner vertical layout for the label, password input field, and button box.
+    # @var hbox
+    # The main vertical layout for the dialog.
+    # @var vbox
+    # The main horizontal layout for the dialog.

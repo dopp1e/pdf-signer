@@ -1,4 +1,5 @@
 #import "resources/format.typ": project
+#import "@preview/muchpdf:0.1.0": muchpdf
 
 #let versions = (
   (
@@ -30,6 +31,11 @@
     "v1.5",
     "28.04.2025",
     "Finished the description of the signer's implementation, its functionality, and the summary."
+  ),
+  (
+    "v1.6",
+    "19.05.2025",
+    "Added a link to the GitHub repository and attached the Doxygen documentation."
   )
 )
 
@@ -52,6 +58,8 @@
   versions: versions
 )
 
+#show link: set text(blue)
+
 #include "chapters/abstract.typ"
 
 #include "chapters/keygen.typ"
@@ -63,3 +71,7 @@
 #pagebreak()
 
 #bibliography("citations.bib")
+
+#align(bottom)[
+  Below is the Doxygen documentation for the project, as required by the project guidelines. 
+]

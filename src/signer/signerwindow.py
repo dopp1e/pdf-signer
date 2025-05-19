@@ -99,8 +99,8 @@ class SignerWindow(genericwindow.GenericWindow):
         Called when the pendrive selection changes.
         It updates the key list and enables/disables the key picker.
         """
-        self.update_key_list()
         self.key_picker.setEnabled(self.is_pendrive_selected())
+        self.update_key_list()
 
     def update_key_list(self) -> None:
         """
@@ -322,7 +322,8 @@ class SignerWindow(genericwindow.GenericWindow):
 
         # Connection set-up
 
-        self.pendrive_selector.currentIndexChanged.connect(self.pendrive_selection_changed)
+        #self.pendrive_selector.currentIndexChanged.connect(self.pendrive_selection_changed)
+        self.pendrive_selector.currentTextChanged.connect(self.pendrive_selection_changed)
         self.pendrive_selection_changed()
         self.verification_radio_toggled()
 
@@ -388,3 +389,23 @@ class SignerWindow(genericwindow.GenericWindow):
     # The QHBoxLayout for the selected PDF file to sign.
     # @var signage_file_picked_label
     # The QLabel for the selected PDF file to sign.
+    # @var signage_inputs_updated
+    # A call to update the inputs for signing a PDF.
+    # @var verification_inputs_updated
+    # A call to update the inputs for verifying a PDF.
+    # @var select_signage_pdf_file
+    # A call to select a PDF file to sign.
+    # @var select_verification_key
+    # A call to select a public key file for verification.
+    # @var select_verification_pdf_file
+    # A call to select a PDF file to verify.
+    # @var sign_pdf_file
+    # A call to sign the selected PDF file with the selected key.
+    # @var save_signed_pdf_file
+    # A call to save the signed PDF file.
+    # @var verify_pdf_signature
+    # A call to verify the signature of the selected PDF file with the selected key.
+    # @var pendrive_selection_changed
+    # A call to update the pendrive selection.
+    # @var verification_radio_toggled
+    # A call to toggle the radio buttons for verification.

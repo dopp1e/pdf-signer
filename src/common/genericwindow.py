@@ -202,4 +202,10 @@ class GenericWindow(QMainWindow):
     # The main horizontal layout for the window.
     # @var vbox
     # The main vertical layout for the window.
+    # @var directory_changed
+    # A call to the directory_changed method when the directory changes.
+    # @var location_confirm
+    # A call to the location_confirm method when the directory picker changes are confirmed.
+    # @var location_changed
+    # A call to the location_changed method when the directory picker is edited.
     

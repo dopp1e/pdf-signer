@@ -24,6 +24,7 @@ import hashlib
 from PyQt6.QtCore import QFile, QDir
 import io
 from typing import List, Tuple 
+from time import sleep
 
 
 class Logic:
@@ -366,6 +367,13 @@ class Logic:
         """
         dir = QDir(location)
         dir.setFilter(QDir.Filter.Dirs | QDir.Filter.NoDotAndDotDot)
+        # more reliable folder existence check
+        attempts = 10
+        while not dir.exists():
+            if attempts == 0:
+                break
+            attempts -= 1
+            sleep(0.3)
         key_list = dir.entryList()
         return key_list
 

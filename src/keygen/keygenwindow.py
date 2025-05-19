@@ -250,6 +250,7 @@ class KeygenWindow(genericwindow.GenericWindow):
         pendrive_name = self.get_pendrive_name()
         location = Logic.make_key_location(watch_folder, pendrive_name)
         keys = Logic.list_keys(location)
+        print(keys)
         self.keys_layout = QVBoxLayout()
         self.keys_layout.setSpacing(4)
         self.keys_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
@@ -394,7 +395,8 @@ class KeygenWindow(genericwindow.GenericWindow):
 
         # Initialization:
 
-        self.pendrive_selector.currentIndexChanged.connect(self.pendrive_selection_changed)
+        #self.pendrive_selector.currentIndexChanged.connect(self.pendrive_selection_changed)
+        self.pendrive_selector.currentTextChanged.connect(self.pendrive_selection_changed)
         self.pendrive_selection_changed()
         self.password_updated()
         self.name_updated()
@@ -451,3 +453,17 @@ class KeygenWindow(genericwindow.GenericWindow):
     # The QWidget for the key generation section.
     # @var lower_layout
     # The layout for the lower part of the window, containing the key generation and management sections.
+    # @var name_updated
+    # A call to the name_updated method when the key name is updated.
+    # @var password_updated
+    # A call to the password_updated method when the password is updated.
+    # @var custom_settings_updated
+    # A call to the custom_settings_updated method when the custom settings are updated.
+    # @var switch_custom_input
+    # A call to the switch_custom_input method when the custom settings checkbox is toggled.
+    # @var pendrive_selection_changed
+    # A call to the pendrive_selection_changed method when the pendrive selection is changed.
+    # @var update_button
+    # A call to the update_button method to update the state of the generate button.
+    # @var generate_key_wrapper
+    # A call to the generate_key_wrapper method when the generate button is clicked.

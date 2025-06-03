@@ -739,11 +739,13 @@ class Logic:
                                 return 4
 
                         except Exception as e:
+                            print(e)
                             pass
 
                 # return result
                 return int(not found_matching_valid_signature)
 
         except Exception as e:
+            print(e)
             # any other errors
             return 5

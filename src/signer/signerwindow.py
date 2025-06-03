@@ -196,7 +196,7 @@ class SignerWindow(genericwindow.GenericWindow):
         elif result == 4:
             self.show_message("The found PDF signature was invalid.")
         elif result == 5:
-            self.show_message("An unknown error occured, please try again.")
+            self.show_message("The file could not be read - it was most likely tampered with.")
 
     def __init__(self):
         """

@@ -16,4 +16,4 @@ The second application is a key generator, which allows the user to generate an 
 
 The code of the project is written in Python, using the _cryptography_ library for handling the cryptographic operations, _PyQt_ for the GUI, and _PyHanko_ for the PDF signing and verification.
 The products of the project are being developed for Linux, with no guarantee of working on another OS.
-The code is documentation is built using _Doxygen_ and this report is written in _Typst_, aditionally version controlled on #link("https://github.com/jakub-jedrzejczyk/pdf-signer")[Github].
+The code is documentation is built using _Doxygen_ and this report is written in _Typst_, aditionally version controlled on #link("https://github.com/dopp1e/pdf-signer")[Github].
